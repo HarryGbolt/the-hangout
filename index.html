@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hangout – Youth Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --green: #2d6a2d;
+    --green-bright: #4aaa4a;
+    --pink: #e03060;
+    --white: #f0f0f0;
+    --grey: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999;
+    opacity: 0.04; mix-blend-mode: overlay;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    padding: 1rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(74,170,74,0.22);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; }
+  .nav-logo span { color: var(--pink); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--pink); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--dark);
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    overflow: hidden;
+    padding: 100px 2rem 4rem;
+  }
+
+  .hero-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(74,170,74,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,170,74,0.055) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .torn-banner {
+    position: relative; background: var(--black);
+    padding: 1.2rem 3.5rem 1.6rem; margin-bottom: 1.2rem; z-index: 2;
+    animation: slideDown 0.8s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  .torn-banner::before, .torn-banner::after {
+    content: ''; position: absolute; left: 0; right: 0; height: 18px; background: var(--black);
+  }
+  .torn-banner::before {
+    top: -16px;
+    clip-path: polygon(0% 100%, 1.5% 20%, 4% 90%, 7% 5%, 10% 80%, 13% 10%, 16.5% 90%, 20% 5%, 23% 75%, 26% 15%, 29% 88%, 32% 5%, 35.5% 72%, 38% 10%, 41% 85%, 44% 0%, 47% 78%, 50% 10%, 53% 88%, 56% 5%, 59% 72%, 62% 15%, 65% 88%, 68% 5%, 71.5% 75%, 74.5% 12%, 78% 88%, 81% 5%, 84% 78%, 87% 12%, 90% 82%, 93% 10%, 96% 80%, 98.5% 25%, 100% 75%, 100% 100%);
+  }
+  .torn-banner::after {
+    bottom: -16px;
+    clip-path: polygon(0% 0%, 2% 85%, 5% 10%, 8% 88%, 11% 18%, 14% 92%, 17.5% 20%, 21% 88%, 24% 12%, 27% 85%, 30% 18%, 33% 92%, 36.5% 20%, 39.5% 88%, 42.5% 12%, 45.5% 85%, 48.5% 5%, 51.5% 88%, 54.5% 15%, 57.5% 90%, 60.5% 8%, 63.5% 80%, 66.5% 18%, 69.5% 88%, 72.5% 10%, 75.5% 85%, 78.5% 18%, 81.5% 90%, 84.5% 8%, 87.5% 82%, 90.5% 12%, 93.5% 85%, 96.5% 15%, 99% 78%, 100% 0%);
+  }
+
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 13vw, 9.5rem); letter-spacing: 0.04em; line-height: 0.88; text-align: center; position: relative; z-index: 2; }
+
+  .pink-badge {
+    background: var(--pink); display: inline-block;
+    padding: 0.4rem 2.2rem 0.5rem;
+    font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.4rem, 4vw, 2.1rem); letter-spacing: 0.18em;
+    position: relative; z-index: 2; margin-bottom: 2.5rem;
+    animation: slideDown 0.9s 0.1s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  .pink-badge::before { content: ''; position: absolute; top: 0; bottom: 0; left: -11px; width: 14px; background: var(--pink); clip-path: polygon(100% 0%, 100% 100%, 0% 65%, 25% 0%); }
+  .pink-badge::after { content: ''; position: absolute; top: 0; bottom: 0; right: -11px; width: 14px; background: var(--pink); clip-path: polygon(0% 0%, 75% 0%, 100% 65%, 0% 100%); }
+
+  .hero-info { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center; z-index: 2; margin-bottom: 2.5rem; animation: fadeUp 0.8s 0.3s both; }
+
+  .info-chip {
+    border: 2px solid var(--green-bright); padding: 0.6rem 1.4rem;
+    font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-bright);
+    position: relative; overflow: hidden; transition: all 0.3s; z-index: 2;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .info-chip svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .info-chip::before { content: ''; position: absolute; inset: 0; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; z-index: -1; }
+  .info-chip:hover { color: var(--white); }
+  .info-chip:hover::before { transform: scaleX(1); }
+
+  .cta-btn {
+    display: inline-block; background: var(--pink); color: var(--white);
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 0.14em;
+    padding: 1rem 3.2rem; text-decoration: none; position: relative; z-index: 2;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 7px 7px 0 rgba(224,48,96,0.28);
+    animation: fadeUp 0.8s 0.5s both;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  }
+  .cta-btn:hover { transform: translate(-3px,-3px); box-shadow: 10px 10px 0 rgba(224,48,96,0.38); }
+
+  /* SECTIONS */
+  section { padding: 5rem 2rem; position: relative; overflow: hidden; }
+  .section-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 2; }
+  .section-label { font-family: 'Bebas Neue', sans-serif; font-size: 0.82rem; letter-spacing: 0.35em; color: var(--pink); margin-bottom: 0.4rem; text-transform: uppercase; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1; margin-bottom: 1.5rem; }
+
+  /* ABOUT */
+  .about { background: var(--dark); border-top: 3px solid var(--green); }
+  .about-deco { position: absolute; right: -60px; top: 50%; transform: translateY(-50%); width: 320px; height: 320px; opacity: 0.13; pointer-events: none; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; }
+  .about-text p { font-size: 1.15rem; line-height: 1.75; color: #bbb; margin-bottom: 1rem; }
+  .age-badge { display: inline-block; background: var(--green); color: var(--white); font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.1em; padding: 0.5rem 1.4rem; margin-top: 0.5rem; }
+  .stat-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .stat-card { background: var(--black); border-left: 4px solid var(--pink); padding: 1.2rem 1.5rem; position: relative; overflow: hidden; transition: transform 0.25s; }
+  .stat-card:hover { transform: translateX(4px); }
+  .stat-card::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, var(--green-bright), transparent); }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; line-height: 1; }
+  .stat-label { font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey); margin-top: 0.2rem; }
+
+  /* ACTIVITIES */
+  .activities { background: var(--black); border-top: 3px solid var(--pink); }
+  .activities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+  .activity-card { background: var(--dark); border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; transition: transform 0.3s, border-color 0.3s; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+  .activity-card:hover { transform: translateY(-5px); border-color: rgba(74,170,74,0.3); }
+  .activity-svg-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .activity-label { position: relative; z-index: 2; background: rgba(10,10,10,0.84); width: 100%; text-align: center; padding: 0.7rem 1rem; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; border-top: 2px solid var(--green); }
+
+  /* DETAILS */
+  .details { background: var(--dark); border-top: 3px solid var(--green); }
+  .details-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .detail-card { background: var(--black); padding: 2rem 1.5rem; border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden; transition: transform 0.25s, border-color 0.25s; }
+  .detail-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--green-bright); }
+  .detail-card:hover { transform: translateY(-4px); border-color: rgba(74,170,74,0.35); }
+  .detail-svg { width: 44px; height: 44px; margin-bottom: 0.8rem; }
+  .detail-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 0.08em; color: var(--pink); margin-bottom: 0.4rem; }
+  .detail-card p { font-size: 1rem; font-weight: 600; color: #bbb; line-height: 1.55; }
+
+  /* SIGNUP */
+  .signup { background: var(--green); position: relative; overflow: hidden; text-align: center; }
+  .signup-art { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.15; }
+  .signup-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 8vw, 5.5rem); letter-spacing: 0.05em; line-height: 1; position: relative; z-index: 1; margin-bottom: 1rem; }
+  .signup p { font-size: 1.2rem; font-weight: 600; color: rgba(255,255,255,0.88); max-width: 520px; margin: 0 auto 2rem; position: relative; z-index: 1; line-height: 1.6; }
+  .signup-btn { display: inline-block; background: var(--black); color: var(--white); font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 0.12em; padding: 1.1rem 3.8rem; text-decoration: none; position: relative; z-index: 1; transition: transform 0.2s, box-shadow 0.2s, background 0.2s; box-shadow: 7px 7px 0 rgba(0,0,0,0.3); clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+  .signup-btn:hover { transform: translate(-3px,-3px); box-shadow: 10px 10px 0 rgba(0,0,0,0.4); background: var(--pink); }
+
+  /* SOCIAL */
+  .social { background: var(--dark); border-top: 3px solid var(--green); text-align: center; }
+  .social-links { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+  .social-link { display: flex; align-items: center; gap: 0.8rem; padding: 1rem 2.2rem; border: 2px solid rgba(255,255,255,0.14); text-decoration: none; color: var(--white); font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.1em; transition: all 0.3s; position: relative; overflow: hidden; }
+  .social-link::before { content: ''; position: absolute; inset: 0; background: var(--pink); transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s ease; z-index: -1; }
+  .social-link:hover { border-color: var(--pink); }
+  .social-link:hover::before { transform: scaleY(1); }
+  .social-link svg { width: 26px; height: 26px; fill: currentColor; flex-shrink: 0; }
+  .social-link.fb { border-color: rgba(74,170,74,0.4); }
+  .social-link.fb .icon { color: var(--green-bright); transition: color 0.3s; }
+  .social-link.ig { border-color: rgba(224,48,96,0.4); }
+  .social-link.ig .icon { color: var(--pink); transition: color 0.3s; }
+  .social-link:hover .icon { color: var(--white); }
+
+  footer { background: var(--black); border-top: 1px solid rgba(255,255,255,0.06); padding: 2rem; text-align: center; }
+  footer p { font-size: 0.88rem; color: var(--grey); letter-spacing: 0.05em; }
+  footer strong { color: var(--pink); }
+
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 700px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .activities-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .torn-banner { padding: 1rem 1.5rem 1.2rem; }
+    .about-deco { display: none; }
+  }
+  @media (max-width: 420px) { .activities-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">The <span>Hangout</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#activities">Activities</a></li>
+    <li><a href="#details">When &amp; Where</a></li>
+    <li><a href="#signup">Sign Up</a></li>
+    <li><a href="#social">Find Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero" style="padding-top:80px;">
+  <div class="hero-grid"></div>
+
+  <!-- Hero SVG: atmospheric spray art -->
+  <svg class="hero-art" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="gG1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4aaa4a" stop-opacity="0.4"/><stop offset="100%" stop-color="#4aaa4a" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gP1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e03060" stop-opacity="0.35"/><stop offset="100%" stop-color="#e03060" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gSprayG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4aaa4a" stop-opacity="0.6"/><stop offset="55%" stop-color="#4aaa4a" stop-opacity="0.12"/><stop offset="100%" stop-color="#4aaa4a" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gSprayP" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e03060" stop-opacity="0.55"/><stop offset="55%" stop-color="#e03060" stop-opacity="0.1"/><stop offset="100%" stop-color="#e03060" stop-opacity="0"/></radialGradient>
+      <filter id="b4"><feGaussianBlur stdDeviation="4"/></filter>
+      <filter id="b10"><feGaussianBlur stdDeviation="10"/></filter>
+      <filter id="b20"><feGaussianBlur stdDeviation="20"/></filter>
+    </defs>
+    <!-- big glows -->
+    <ellipse cx="600" cy="80" rx="520" ry="200" fill="url(#gG1)" filter="url(#b20)"/>
+    <ellipse cx="980" cy="600" rx="300" ry="180" fill="url(#gP1)" filter="url(#b20)"/>
+    <ellipse cx="100" cy="520" rx="200" ry="140" fill="url(#gG1)" filter="url(#b20)" opacity="0.5"/>
+    <!-- spray splat TL -->
+    <ellipse cx="72" cy="130" rx="95" ry="82" fill="url(#gSprayG)" filter="url(#b10)"/>
+    <circle cx="72" cy="130" r="28" fill="#4aaa4a" opacity="0.2" filter="url(#b4)"/>
+    <circle cx="48" cy="108" r="9" fill="#4aaa4a" opacity="0.28"/>
+    <circle cx="95" cy="148" r="6" fill="#4aaa4a" opacity="0.22"/>
+    <circle cx="110" cy="115" r="4" fill="#4aaa4a" opacity="0.18"/>
+    <circle cx="38" cy="150" r="3" fill="#4aaa4a" opacity="0.15"/>
+    <!-- spray splat BR -->
+    <ellipse cx="1140" cy="610" rx="115" ry="95" fill="url(#gSprayP)" filter="url(#b10)"/>
+    <circle cx="1140" cy="610" r="38" fill="#e03060" opacity="0.22" filter="url(#b4)"/>
+    <circle cx="1108" cy="584" r="11" fill="#e03060" opacity="0.28"/>
+    <circle cx="1165" cy="630" r="7" fill="#e03060" opacity="0.22"/>
+    <circle cx="1175" cy="595" r="4" fill="#e03060" opacity="0.18"/>
+    <!-- small green spray TR -->
+    <ellipse cx="1080" cy="100" rx="65" ry="55" fill="url(#gSprayG)" filter="url(#b10)" opacity="0.7"/>
+    <circle cx="1055" cy="80" r="7" fill="#4aaa4a" opacity="0.22"/>
+    <circle cx="1100" cy="115" r="4" fill="#4aaa4a" opacity="0.18"/>
+    <!-- small pink spray BL -->
+    <ellipse cx="140" cy="600" rx="70" ry="58" fill="url(#gSprayP)" filter="url(#b10)" opacity="0.6"/>
+    <circle cx="115" cy="580" r="8" fill="#e03060" opacity="0.2"/>
+    <!-- large rotated square frame left -->
+    <rect x="-80" y="260" width="200" height="200" rx="6" fill="none" stroke="#4aaa4a" stroke-width="2" opacity="0.16" transform="rotate(20,20,360)"/>
+    <rect x="-58" y="282" width="156" height="156" rx="4" fill="none" stroke="#4aaa4a" stroke-width="1" opacity="0.09" transform="rotate(20,20,360)"/>
+    <!-- diamond top-right -->
+    <polygon points="1095,48 1152,132 1095,216 1038,132" fill="none" stroke="#e03060" stroke-width="2" opacity="0.2"/>
+    <polygon points="1095,70 1137,132 1095,194 1053,132" fill="none" stroke="#e03060" stroke-width="1" opacity="0.12"/>
+    <!-- triangle top-centre -->
+    <polygon points="600,22 665,125 535,125" fill="none" stroke="#e03060" stroke-width="1.5" opacity="0.15"/>
+    <!-- stencil cross marks -->
+    <g stroke="#4aaa4a" stroke-width="2.2" opacity="0.18" stroke-linecap="round">
+      <line x1="985" y1="72" x2="985" y2="104"/><line x1="969" y1="88" x2="1001" y2="88"/>
+      <line x1="210" y1="595" x2="210" y2="622"/><line x1="196" y1="608" x2="224" y2="608"/>
+      <line x1="330" y1="175" x2="330" y2="198"/><line x1="318" y1="186" x2="342" y2="186"/>
+    </g>
+    <g stroke="#e03060" stroke-width="2.2" opacity="0.16" stroke-linecap="round">
+      <line x1="855" y1="155" x2="855" y2="184"/><line x1="840" y1="169" x2="870" y2="169"/>
+      <line x1="58" y1="368" x2="58" y2="395"/><line x1="44" y1="381" x2="72" y2="381"/>
+    </g>
+    <!-- stencil slashes -->
+    <g stroke="#4aaa4a" stroke-width="3" opacity="0.1" stroke-linecap="round">
+      <line x1="995" y1="295" x2="1060" y2="385"/>
+      <line x1="1012" y1="295" x2="1077" y2="385"/>
+      <line x1="1029" y1="295" x2="1094" y2="385"/>
+    </g>
+    <g stroke="#e03060" stroke-width="3" opacity="0.1" stroke-linecap="round">
+      <line x1="128" y1="420" x2="182" y2="498"/>
+      <line x1="144" y1="420" x2="198" y2="498"/>
+    </g>
+    <!-- concentric circles BL -->
+    <circle cx="185" cy="685" r="130" fill="none" stroke="#4aaa4a" stroke-width="1.5" opacity="0.12"/>
+    <circle cx="185" cy="685" r="95" fill="none" stroke="#4aaa4a" stroke-width="1" opacity="0.09"/>
+    <circle cx="185" cy="685" r="62" fill="none" stroke="#4aaa4a" stroke-width="1" opacity="0.06"/>
+    <!-- starburst -->
+    <g transform="translate(938,225)" stroke="#4aaa4a" stroke-width="1.8" opacity="0.16" stroke-linecap="round">
+      <line x1="0" y1="-30" x2="0" y2="30"/>
+      <line x1="-30" y1="0" x2="30" y2="0"/>
+      <line x1="-21" y1="-21" x2="21" y2="21"/>
+      <line x1="21" y1="-21" x2="-21" y2="21"/>
+    </g>
+    <!-- scattered dots -->
+    <g fill="#4aaa4a" opacity="0.3">
+      <circle cx="705" cy="598" r="5"/><circle cx="722" cy="612" r="3"/><circle cx="692" cy="616" r="3.5"/><circle cx="742" cy="601" r="2"/>
+    </g>
+    <g fill="#e03060" opacity="0.25">
+      <circle cx="398" cy="76" r="5.5"/><circle cx="418" cy="62" r="3.5"/><circle cx="382" cy="68" r="3"/>
+    </g>
+    <!-- small sticker rects -->
+    <rect x="348" y="562" width="42" height="13" rx="2" fill="#e03060" opacity="0.22"/>
+    <rect x="802" y="74" width="32" height="11" rx="2" fill="#4aaa4a" opacity="0.28"/>
+    <rect x="1055" y="445" width="24" height="9" rx="1" fill="#e03060" opacity="0.18"/>
+  </svg>
+
+  <div class="torn-banner">
+    <h1 class="hero-title">THE HANGOUT</h1>
+  </div>
+  <div class="pink-badge">Youth Club</div>
+  <div class="hero-info">
+    <div class="info-chip">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Every Thursday
+    </div>
+    <div class="info-chip">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      6PM – 7:30PM
+    </div>
+    <div class="info-chip">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Caister Community Spoon
+    </div>
+    <div class="info-chip">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Ages 11–17
+    </div>
+  </div>
+  <a href="#signup" class="cta-btn">Sign Up Now →</a>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <!-- large decorative ring (target / crosshair) -->
+  <svg class="about-deco" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="150" cy="150" r="135" fill="none" stroke="#4aaa4a" stroke-width="2"/>
+    <circle cx="150" cy="150" r="105" fill="none" stroke="#e03060" stroke-width="1.5"/>
+    <circle cx="150" cy="150" r="75" fill="none" stroke="#4aaa4a" stroke-width="1.2"/>
+    <circle cx="150" cy="150" r="45" fill="none" stroke="#e03060" stroke-width="1"/>
+    <circle cx="150" cy="150" r="18" fill="#e03060" opacity="0.12"/>
+    <line x1="150" y1="10" x2="150" y2="290" stroke="#4aaa4a" stroke-width="1"/>
+    <line x1="10" y1="150" x2="290" y2="150" stroke="#4aaa4a" stroke-width="1"/>
+    <line x1="54" y1="54" x2="246" y2="246" stroke="#e03060" stroke-width="0.8"/>
+    <line x1="246" y1="54" x2="54" y2="246" stroke="#e03060" stroke-width="0.8"/>
+  </svg>
+
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-label">Who we are</div>
+        <h2 class="section-title">A Space That's Yours</h2>
+        <p>The Hangout is a free, safe space for young people aged 11–17 to come together, meet new friends, have fun and just be themselves.</p>
+        <p>Every Thursday evening at Caister Community Spoon, we bring together young people from the local area for a relaxed, welcoming session full of activities, games and great vibes.</p>
+        <div class="age-badge">Ages 11 – 17 Welcome</div>
+      </div>
+      <div class="stat-cards">
+        <div class="stat-card"><div class="stat-num">Every<br>Thursday</div><div class="stat-label">Weekly sessions, no gaps</div></div>
+        <div class="stat-card"><div class="stat-num">1.5 Hrs</div><div class="stat-label">6PM – 7:30PM each week</div></div>
+        <div class="stat-card"><div class="stat-num">11–17</div><div class="stat-label">All ages in that range welcome</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITIES -->
+<section class="activities" id="activities">
+  <div class="section-inner">
+    <div class="section-label">What's on</div>
+    <h2 class="section-title">Come For The Fun</h2>
+    <div class="activities-grid">
+
+      <!-- Games -->
+      <div class="activity-card">
+        <div class="activity-svg-wrap">
+          <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="cg1" cx="50%" cy="30%" r="70%"><stop offset="0%" stop-color="#2d6a2d" stop-opacity="0.5"/><stop offset="100%" stop-color="#111" stop-opacity="1"/></radialGradient>
+            </defs>
+            <rect width="200" height="200" fill="url(#cg1)"/>
+            <!-- grid faint -->
+            <g stroke="#4aaa4a" stroke-width="0.5" opacity="0.12">
+              <line x1="0" y1="50" x2="200" y2="50"/><line x1="0" y1="100" x2="200" y2="100"/><line x1="0" y1="150" x2="200" y2="150"/>
+              <line x1="50" y1="0" x2="50" y2="200"/><line x1="100" y1="0" x2="100" y2="200"/><line x1="150" y1="0" x2="150" y2="200"/>
+            </g>
+            <!-- controller body -->
+            <rect x="42" y="68" width="116" height="72" rx="16" fill="#1a1a1a" stroke="#4aaa4a" stroke-width="2.5"/>
+            <!-- D-pad -->
+            <rect x="58" y="92" width="26" height="10" rx="3" fill="#4aaa4a" opacity="0.9"/>
+            <rect x="66" y="84" width="10" height="26" rx="3" fill="#4aaa4a" opacity="0.9"/>
+            <!-- face buttons -->
+            <circle cx="138" cy="95" r="7" fill="#e03060" opacity="0.9"/>
+            <circle cx="152" cy="95" r="7" fill="#4aaa4a" opacity="0.9"/>
+            <circle cx="145" cy="85" r="7" fill="#f0f0f0" opacity="0.35"/>
+            <circle cx="145" cy="105" r="7" fill="#f0f0f0" opacity="0.25"/>
+            <!-- select/start -->
+            <rect x="90" y="99" width="10" height="6" rx="2" fill="#888" opacity="0.7"/>
+            <rect x="105" y="99" width="10" height="6" rx="2" fill="#888" opacity="0.7"/>
+            <!-- glow under -->
+            <ellipse cx="100" cy="155" rx="55" ry="12" fill="#4aaa4a" opacity="0.14"/>
+          </svg>
+        </div>
+        <div class="activity-label">Games</div>
+      </div>
+
+      <!-- Music -->
+      <div class="activity-card">
+        <div class="activity-svg-wrap">
+          <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="cg2" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#1a1a1a"/><stop offset="100%" stop-color="#0a0a0a"/></radialGradient>
+            </defs>
+            <rect width="200" height="200" fill="url(#cg2)"/>
+            <!-- record outer -->
+            <circle cx="100" cy="100" r="76" fill="#1c1c1c" stroke="#4aaa4a" stroke-width="2.5"/>
+            <!-- grooves -->
+            <circle cx="100" cy="100" r="64" fill="none" stroke="#2d6a2d" stroke-width="1" opacity="0.5"/>
+            <circle cx="100" cy="100" r="52" fill="none" stroke="#2d6a2d" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="100" cy="100" r="40" fill="none" stroke="#2d6a2d" stroke-width="0.8" opacity="0.35"/>
+            <!-- label ring -->
+            <circle cx="100" cy="100" r="28" fill="#e03060" opacity="0.75"/>
+            <circle cx="100" cy="100" r="20" fill="#c02850" opacity="0.6"/>
+            <!-- sheen highlight -->
+            <ellipse cx="88" cy="88" rx="12" ry="8" fill="#fff" opacity="0.08" transform="rotate(-30,88,88)"/>
+            <!-- centre hole -->
+            <circle cx="100" cy="100" r="6" fill="#111"/>
+            <circle cx="100" cy="100" r="3" fill="#333"/>
+            <!-- music notes floating -->
+            <text x="32" y="60" fill="#4aaa4a" opacity="0.65" font-size="20" font-family="serif">♪</text>
+            <text x="150" y="155" fill="#4aaa4a" opacity="0.55" font-size="16" font-family="serif">♫</text>
+            <text x="155" y="65" fill="#e03060" opacity="0.4" font-size="13" font-family="serif">♩</text>
+            <!-- glow -->
+            <ellipse cx="100" cy="180" rx="60" ry="14" fill="#e03060" opacity="0.1"/>
+          </svg>
+        </div>
+        <div class="activity-label">Music &amp; Vibes</div>
+      </div>
+
+      <!-- Friends -->
+      <div class="activity-card">
+        <div class="activity-svg-wrap">
+          <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="cg3" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#2d1a20" stop-opacity="1"/><stop offset="100%" stop-color="#0a0a0a" stop-opacity="1"/></radialGradient>
+            </defs>
+            <rect width="200" height="200" fill="url(#cg3)"/>
+            <!-- spray aura -->
+            <ellipse cx="100" cy="90" rx="70" ry="60" fill="#e03060" opacity="0.08"/>
+            <!-- left person -->
+            <circle cx="66" cy="72" r="20" fill="#e03060" opacity="0.8"/>
+            <ellipse cx="66" cy="122" rx="28" ry="22" fill="#e03060" opacity="0.65"/>
+            <!-- right person -->
+            <circle cx="134" cy="72" r="20" fill="#4aaa4a" opacity="0.8"/>
+            <ellipse cx="134" cy="122" rx="28" ry="22" fill="#4aaa4a" opacity="0.65"/>
+            <!-- centre person -->
+            <circle cx="100" cy="62" r="18" fill="#f0f0f0" opacity="0.6"/>
+            <ellipse cx="100" cy="110" rx="24" ry="20" fill="#f0f0f0" opacity="0.45"/>
+            <!-- connect dots -->
+            <line x1="86" y1="72" x2="100" y2="72" stroke="#fff" stroke-width="1.5" opacity="0.2" stroke-dasharray="3,3"/>
+            <line x1="114" y1="72" x2="100" y2="72" stroke="#fff" stroke-width="1.5" opacity="0.2" stroke-dasharray="3,3"/>
+            <!-- glow floor -->
+            <ellipse cx="100" cy="162" rx="65" ry="12" fill="#e03060" opacity="0.1"/>
+          </svg>
+        </div>
+        <div class="activity-label">Meet New People</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DETAILS -->
+<section class="details" id="details">
+  <div class="section-inner">
+    <div class="section-label">When &amp; Where</div>
+    <h2 class="section-title">Find Us</h2>
+    <div class="details-cards">
+
+      <div class="detail-card">
+        <svg class="detail-svg" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="8" width="36" height="30" rx="4" fill="none" stroke="#4aaa4a" stroke-width="2"/>
+          <line x1="4" y1="17" x2="40" y2="17" stroke="#4aaa4a" stroke-width="1.5"/>
+          <line x1="14" y1="4" x2="14" y2="13" stroke="#4aaa4a" stroke-width="2" stroke-linecap="round"/>
+          <line x1="30" y1="4" x2="30" y2="13" stroke="#4aaa4a" stroke-width="2" stroke-linecap="round"/>
+          <rect x="13" y="22" width="8" height="7" rx="1" fill="#e03060" opacity="0.85"/>
+          <rect x="24" y="22" width="8" height="7" rx="1" fill="#4aaa4a" opacity="0.7"/>
+        </svg>
+        <h3>Day</h3>
+        <p>Every Thursday<br>No booking needed!</p>
+      </div>
+
+      <div class="detail-card">
+        <svg class="detail-svg" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="22" r="17" fill="none" stroke="#4aaa4a" stroke-width="2"/>
+          <circle cx="22" cy="22" r="13" fill="none" stroke="#2d6a2d" stroke-width="1" opacity="0.5"/>
+          <line x1="22" y1="22" x2="22" y2="11" stroke="#f0f0f0" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="22" y1="22" x2="31" y2="27" stroke="#e03060" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="22" cy="22" r="2.5" fill="#4aaa4a"/>
+        </svg>
+        <h3>Time</h3>
+        <p>6:00PM – 7:30PM<br>Doors open 5:50PM</p>
+      </div>
+
+      <div class="detail-card">
+        <svg class="detail-svg" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 5 C13 5 6 12 6 20 C6 31 22 40 22 40 C22 40 38 31 38 20 C38 12 31 5 22 5Z" fill="none" stroke="#4aaa4a" stroke-width="2"/>
+          <circle cx="22" cy="20" r="7" fill="#e03060" opacity="0.8"/>
+          <circle cx="22" cy="20" r="3.5" fill="#f0f0f0" opacity="0.5"/>
+        </svg>
+        <h3>Location</h3>
+        <p>Caister Community Spoon<br>Caister-on-Sea</p>
+      </div>
+
+      <div class="detail-card">
+        <svg class="detail-svg" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="15" cy="15" r="9" fill="none" stroke="#4aaa4a" stroke-width="2"/>
+          <path d="M2,37 Q2,26 15,26 Q28,26 28,37" fill="none" stroke="#4aaa4a" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="31" cy="13" r="8" fill="none" stroke="#e03060" stroke-width="1.8"/>
+          <path d="M20,35 Q22,27 31,27 Q42,27 42,37" fill="none" stroke="#e03060" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <h3>Who</h3>
+        <p>Young people aged<br>11 to 17 years old</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<section class="signup" id="signup">
+  <!-- background geometric art -->
+  <svg class="signup-art" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="sg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#000" stop-opacity="0.3"/><stop offset="100%" stop-color="#000" stop-opacity="0"/></radialGradient>
+    </defs>
+    <ellipse cx="600" cy="210" rx="520" ry="210" fill="url(#sg1)"/>
+    <!-- diagonal lines -->
+    <g stroke="#000" stroke-width="1.5" opacity="0.18">
+      <line x1="0" y1="0" x2="1200" y2="420"/>
+      <line x1="0" y1="420" x2="1200" y2="0"/>
+      <line x1="0" y1="210" x2="1200" y2="210"/>
+      <line x1="600" y1="0" x2="600" y2="420"/>
+    </g>
+    <!-- diamonds -->
+    <polygon points="140,90 200,210 140,330 80,210" fill="none" stroke="#000" stroke-width="2" opacity="0.22"/>
+    <polygon points="1060,70 1130,210 1060,350 990,210" fill="none" stroke="#000" stroke-width="1.8" opacity="0.18"/>
+    <!-- spray dots -->
+    <g fill="#000" opacity="0.14">
+      <circle cx="290" cy="70" r="28"/><circle cx="268" cy="88" r="16"/><circle cx="312" cy="58" r="10"/>
+      <circle cx="910" cy="350" r="24"/><circle cx="888" cy="335" r="14"/>
+    </g>
+    <!-- stars -->
+    <g stroke="#000" stroke-width="2.5" opacity="0.18" stroke-linecap="round">
+      <line x1="75" y1="300" x2="75" y2="360"/><line x1="45" y1="330" x2="105" y2="330"/>
+      <line x1="54" y1="309" x2="96" y2="351"/><line x1="96" y1="309" x2="54" y2="351"/>
+      <line x1="1110" y1="55" x2="1110" y2="115"/><line x1="1080" y1="85" x2="1140" y2="85"/>
+      <line x1="1089" y1="64" x2="1131" y2="106"/><line x1="1131" y1="64" x2="1089" y2="106"/>
+    </g>
+    <!-- concentric rings -->
+    <circle cx="600" cy="210" r="180" fill="none" stroke="#000" stroke-width="1" opacity="0.12"/>
+    <circle cx="600" cy="210" r="120" fill="none" stroke="#000" stroke-width="1" opacity="0.09"/>
+  </svg>
+
+  <div class="section-inner">
+    <h2 class="signup-title">Ready to Join?</h2>
+    <p>Sign up to let us know you're coming — it only takes a minute and helps us plan a great session.</p>
+    <a href="#" class="signup-btn" onclick="alert('Replace this href with your sign-up form link!'); return false;">
+      <svg style="width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:8px;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Sign Up Here
+    </a>
+  </div>
+</section>
+
+<!-- SOCIAL -->
+<section class="social" id="social">
+  <div class="section-inner">
+    <div class="section-label">Stay Connected</div>
+    <h2 class="section-title">Follow The Hangout</h2>
+    <p style="color:#999; font-size:1.1rem; font-weight:600; margin-top:0.5rem;">Keep up to date with sessions, events and news on our socials.</p>
+    <div class="social-links">
+      <a href="https://www.facebook.com" target="_blank" class="social-link fb">
+        <span class="icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </span>
+        Facebook
+      </a>
+      <a href="https://www.instagram.com" target="_blank" class="social-link ig">
+        <span class="icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </span>
+        Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>The Hangout Youth Club</strong> &nbsp;·&nbsp; Every Thursday 6–7:30PM &nbsp;·&nbsp; Caister Community Spoon &nbsp;·&nbsp; Ages 11–17</p>
+  <p style="margin-top:0.5rem; font-size:0.8rem;">Made with <span style="color:var(--pink);">&#9829;</span> for young people in Caister</p>
+</footer>
+
+</body>
+</html>
